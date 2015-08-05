@@ -6,7 +6,8 @@ output: html_document
 This is an R Markdown document for Reproducible Research assignment 1.
 
 ### 1. Load the libraries and data, and preprocess the data
-```{r results="hide"}
+
+```r
 library(dplyr)
 library(stringr)
 library(ggplot2)
@@ -28,33 +29,50 @@ steps_datetime<-filter(acdatetime,steps!="NA")
 
 ### 2.What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 by_day<-group_by(steps_datetime,date)
 sumbyday<-summarise_each(by_day,funs(sum),steps)
 hist(sumbyday$steps,breaks=10,main="Histogram of steps taken per day",xlab="Steps taken per day")
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
+```r
 print(summary(sumbyday$steps))
 ```
 
-The mean total number of steps taken per day is `r as.integer(round(mean(sumbyday$steps)))`.
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    8841   10760   10770   13290   21190
+```
+
+The mean total number of steps taken per day is 10766.
 
 
 ### 3. What is the average daily activity pattern?
-```{r}
+
+```r
 pattern<-group_by(steps_datetime,interval)
 avgbyinterval<-summarise_each(pattern,funs(mean),steps)
 
 plot(avgbyinterval$interval,avgbyinterval$steps, type="l", xlab="5-min intervals throughout the day", ylab="steps taken in each 5-min interval")
+```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
+```r
 ordered<-arrange(avgbyinterval,desc(steps))
 maxinterval<-ordered[1,1]
 maxstep<-as.integer(ordered[1,2])
 ```
-The 5-min interval at `r maxinterval` contains the maximum number of steps: `r maxstep`.
+The 5-min interval at 0835 contains the maximum number of steps: 206.
 
 
 ### 4. Imputing missing values
 Imputing strategy: The rounded average number of steps taken per interval calculated from the data set with missing data removed will be used for that interval whenever the data is missing.
-```{r}
+
+```r
 # obtaining a data frame containging rounded value of the mean of steps per interval
 intavgsteps<-as.integer(round(avgbyinterval$steps))
 avgbyinterval<-cbind(avgbyinterval,intavgsteps)
@@ -78,7 +96,11 @@ by_day_imputed<-group_by(imputed,date)
 sumbyday_imputed<-summarise_each(by_day_imputed,funs(sum),steps)
 # make a histogram with data set containing imputed data
 hist(sumbyday_imputed$steps,breaks=10,main="Histogram of steps taken per day with missing data imputed",xlab="Steps taken per day")
+```
 
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+
+```r
 # group and summarize the data set containing imputed data
 patternimputed<-group_by(imputed,interval)
 avgbyintervalimputed<-summarise_each(patternimputed,funs(mean),steps)
@@ -87,30 +109,36 @@ avgbyintervalimputed<-summarise_each(patternimputed,funs(mean),steps)
 par(mfrow=c(2,1))
 plot(avgbyinterval$interval,avgbyinterval$mysteps, type="l",xlab="5-min intervals throughout the day", ylab="steps taken in each interval", main="missing value removed")
 plot(avgbyintervalimputed$interval,avgbyintervalimputed$steps, type="l",xlab="5-min intervals throughout the day", ylab="steps taken in each interval", main="missing value imputed")
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-2.png) 
+
+```r
 par(mfrow=c(1,1))
 ```
 
 
-The total number of missing values in the dataset is `r num_missing`.
+The total number of missing values in the dataset is 2304.
 
 Summary with missing data removed:
-```{r echo=FALSE}
-#print steps per day with na removed
-print(summary(sumbyday$steps))
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    8841   10760   10770   13290   21190
 ```
 Summary with missing data imputed:
-```{r echo=FALSE}
-#calculate and print steps per day with missing data imputed
-by_day_imputed<-group_by(imputed,date)
-sumbyday_imputed<-summarise_each(by_day_imputed,funs(sum),steps)
-print(summary(sumbyday_imputed$steps))
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    9819   10760   10770   12810   21190
 ```
 The results are very similar but not identical; therefore, imputing missing data using the way described above does not have a dramatic effect on the results of the estimates of the total daily number of steps.
 
 
 
 ###5. Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 # use the data set with the filled-in missing data
 
 #create a column "dayorend" to denote weekday and weekend
@@ -123,8 +151,9 @@ avgdayorend<-summarise_each(patterndayorend,funs(mean),steps)
 #plot the result
 g<-ggplot(avgdayorend,aes(interval,steps,group=1))
 print(g+geom_line()+facet_grid(dayorend~.))
-
 ```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
 
 
 Comparison of the two graphs shows that on the weekdays, the activity starts earlier and has a larger early morning peak and that, on the weekend, the activity starts later and the morning peak is less pronounce, i.e., the activity is more evenly spreaded over the course the day.

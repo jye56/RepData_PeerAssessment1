@@ -1,6 +1,6 @@
 ---
 title: "RepData_PeerAssessment1"
-output: html_document
+output: word_document
 ---
 
 This is an R Markdown document for Reproducible Research assignment 1.
@@ -78,6 +78,9 @@ by_day_imputed<-group_by(imputed,date)
 sumbyday_imputed<-summarise_each(by_day_imputed,funs(sum),steps)
 # make a histogram with data set containing imputed data
 hist(sumbyday_imputed$steps,breaks=10,main="Histogram of steps taken per day with missing data imputed",xlab="Steps taken per day")
+```
+
+```{r, fig.height= 9, fig.width=8}
 
 # group and summarize the data set containing imputed data
 patternimputed<-group_by(imputed,interval)
@@ -105,7 +108,15 @@ by_day_imputed<-group_by(imputed,date)
 sumbyday_imputed<-summarise_each(by_day_imputed,funs(sum),steps)
 print(summary(sumbyday_imputed$steps))
 ```
-The results are very similar but not identical; therefore, imputing missing data using the way described above does not have a dramatic effect on the results of the estimates of the total daily number of steps.
+As one can see from the above data set summary, the results are very similar but not identical; therefore, imputing missing data using the way described above does not have a significant effect on the results of the estimates of the total daily number of steps. In fact, if we plot both lines in the same graph, the two lines are identical at the resolution of the current graphing scale (missing value removed-green, missing value imputed-read).
+
+
+```{r}
+
+plot(avgbyinterval$interval,avgbyinterval$mysteps, type="l",xlab="5-min intervals throughout the day", ylab="steps taken in each interval", main="Missing values removed and imputed",col="green")
+lines(avgbyintervalimputed$interval,avgbyintervalimputed$steps,lty=2, col="red")
+
+```
 
 
 

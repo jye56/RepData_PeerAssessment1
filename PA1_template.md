@@ -100,6 +100,7 @@ hist(sumbyday_imputed$steps,breaks=10,main="Histogram of steps taken per day wit
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
+
 ```r
 # group and summarize the data set containing imputed data
 patternimputed<-group_by(imputed,interval)
@@ -111,7 +112,7 @@ plot(avgbyinterval$interval,avgbyinterval$mysteps, type="l",xlab="5-min interval
 plot(avgbyintervalimputed$interval,avgbyintervalimputed$steps, type="l",xlab="5-min intervals throughout the day", ylab="steps taken in each interval", main="missing value imputed")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-2.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 ```r
 par(mfrow=c(1,1))
@@ -132,7 +133,16 @@ Summary with missing data imputed:
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##      41    9819   10760   10770   12810   21190
 ```
-The results are very similar but not identical; therefore, imputing missing data using the way described above does not have a dramatic effect on the results of the estimates of the total daily number of steps.
+As one can see from the above data set summary, the results are very similar but not identical; therefore, imputing missing data using the way described above does not have a significant effect on the results of the estimates of the total daily number of steps. In fact, if we plot both lines in the same graph, the two lines are identical at the resolution of the current graphing scale (missing value removed-green, missing value imputed-read).
+
+
+
+```r
+plot(avgbyinterval$interval,avgbyinterval$mysteps, type="l",xlab="5-min intervals throughout the day", ylab="steps taken in each interval", main="Missing values removed and imputed",col="green")
+lines(avgbyintervalimputed$interval,avgbyintervalimputed$steps,lty=2, col="red")
+```
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 
 
 
@@ -153,7 +163,7 @@ g<-ggplot(avgdayorend,aes(interval,steps,group=1))
 print(g+geom_line()+facet_grid(dayorend~.))
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
 
 
 Comparison of the two graphs shows that on the weekdays, the activity starts earlier and has a larger early morning peak and that, on the weekend, the activity starts later and the morning peak is less pronounce, i.e., the activity is more evenly spreaded over the course the day.

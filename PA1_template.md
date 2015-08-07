@@ -5,6 +5,7 @@ output: html_document
 
 This is an R Markdown document for Reproducible Research assignment 1.
 
+
 ### 1. Load the libraries and data, and preprocess the data
 
 ```r
